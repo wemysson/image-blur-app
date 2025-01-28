@@ -82,21 +82,6 @@ async function downloadImage() {
     }
 }
 
-// Função para copiar imagem
-async function copyImage() {
-    if (!currentImage) return;
-    
-    try {
-        const response = await fetch(currentImage);
-        const blob = await response.blob();
-        const item = new ClipboardItem({ 'image/jpeg': blob });
-        await navigator.clipboard.write([item]);
-        alert('Imagem copiada para a área de transferência!');
-    } catch (error) {
-        alert('Erro ao copiar imagem: ' + error.message);
-    }
-}
-
 // Função para redefinir
 function resetImage() {
     currentImage = null;
@@ -141,11 +126,18 @@ document.getElementById('fileInput').addEventListener('change', (e) => {
 // Função para toggle fullscreen
 function toggleFullscreen() {
     const container = document.getElementById('imageContainer');
+    const icon = document.querySelector('.fullscreen-icon i');
+    
     container.classList.toggle('fullscreen');
+    
     if (container.classList.contains('fullscreen')) {
         document.body.style.overflow = 'hidden';
+        icon.classList.remove('fa-expand');
+        icon.classList.add('fa-compress');
     } else {
         document.body.style.overflow = 'auto';
+        icon.classList.remove('fa-compress');
+        icon.classList.add('fa-expand');
     }
 }
 
@@ -153,9 +145,12 @@ function toggleFullscreen() {
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         const container = document.getElementById('imageContainer');
+        const icon = document.querySelector('.fullscreen-icon i');
         if (container.classList.contains('fullscreen')) {
             container.classList.remove('fullscreen');
             document.body.style.overflow = 'auto';
+            icon.classList.remove('fa-compress');
+            icon.classList.add('fa-expand');
         }
     }
 });

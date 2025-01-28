@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajuste de Desfoque de Imagem</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -22,7 +23,12 @@
         </div>
 
         <div class="image-container" id="imageContainer" style="display: none;">
-            <img id="previewImage" alt="Preview">
+            <div class="image-wrapper">
+                <img id="previewImage" alt="Preview">
+                <button class="fullscreen-icon" onclick="toggleFullscreen()">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
             <div class="controls">
                 <div class="slider-container">
                     <label for="blurRange">Nível de Desfoque: <span id="blurValue">0</span></label>
@@ -30,8 +36,6 @@
                 </div>
                 <div class="buttons">
                     <button class="btn" onclick="downloadImage()">Baixar</button>
-                    <button class="btn" onclick="copyImage()">Copiar</button>
-                    <button class="btn" onclick="toggleFullscreen()">Tela Cheia</button>
                     <button class="btn" onclick="resetImage()">Redefinir</button>
                     <button class="btn" onclick="changeImage()">Trocar Imagem</button>
                 </div>
