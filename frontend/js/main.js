@@ -1,4 +1,5 @@
 let currentImage = null;
+let originalImage = null;  // Armazena a imagem original
 let lastBlurUpdate = 0;
 const updateDelay = 150; // Delay em ms para atualizar o desfoque
 
@@ -16,7 +17,7 @@ function debounce(func, wait) {
 }
 
 // Função para processar a imagem
-async function processImage(file) {
+async function processImage(file, isInitialUpload = false) {
     const formData = new FormData();
     formData.append('image', file);
     formData.append('blur', document.getElementById('blurRange').value);
@@ -30,6 +31,9 @@ async function processImage(file) {
         if (data.error) throw new Error(data.error);
         
         currentImage = data.image;
+        if (isInitialUpload) {
+            originalImage = currentImage; // Salva a imagem original apenas no upload inicial
+        }
         document.getElementById('previewImage').src = currentImage;
         document.getElementById('imageContainer').style.display = 'block';
         document.getElementById('dropZone').style.display = 'none';
@@ -42,7 +46,14 @@ async function processImage(file) {
 const updateBlur = debounce(async (value) => {
     if (!currentImage) return;
     
-    const file = await fetch(currentImage)
+    if (parseFloat(value) === 0) {
+        // Se o valor do blur for 0, restaura a imagem original
+        currentImage = originalImage;
+        document.getElementById('previewImage').src = originalImage;
+        return;
+    }
+    
+    const file = await fetch(originalImage)  // Usa a imagem original como base
         .then(res => res.blob())
         .then(blob => new File([blob], 'image.jpg', { type: 'image/jpeg' }));
     
@@ -85,6 +96,7 @@ async function downloadImage() {
 // Função para redefinir
 function resetImage() {
     currentImage = null;
+    originalImage = null;
     document.getElementById('blurRange').value = 0;
     document.getElementById('blurValue').textContent = '0';
     document.getElementById('imageContainer').style.display = 'none';
@@ -112,14 +124,14 @@ dropZone.addEventListener('drop', (e) => {
     dropZone.classList.remove('dragover');
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) {
-        processImage(file);
+        processImage(file, true);  // true indica upload inicial
     }
 });
 
 document.getElementById('fileInput').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
-        processImage(file);
+        processImage(file, true);  // true indica upload inicial
     }
 });
 
