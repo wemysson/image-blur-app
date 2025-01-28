@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajuste de Desfoque de Imagem</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Ajuste de Desfoque de Imagem</h1>
+        <p>Envie uma imagem e ajuste o desfoque em tempo real</p>
+        
+        <div class="upload-container" id="dropZone">
+            <div class="upload-area">
+                <div class="upload-icon">📁</div>
+                <p>Arraste e solte sua imagem aqui</p>
+                <p>ou</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <button class="btn" onclick="document.getElementById('fileInput').click()">Escolher Arquivo</button>
+            </div>
+        </div>
+
+        <div class="image-container" id="imageContainer" style="display: none;">
+            <img id="previewImage" alt="Preview">
+            <div class="controls">
+                <div class="slider-container">
+                    <label for="blurRange">Nível de Desfoque: <span id="blurValue">0</span></label>
+                    <input type="range" id="blurRange" min="0" max="20" step="0.1" value="0">
+                </div>
+                <div class="buttons">
+                    <button class="btn" onclick="downloadImage()">Baixar</button>
+                    <button class="btn" onclick="toggleFullscreen()">Tela Cheia</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
