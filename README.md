@@ -11,12 +11,6 @@ Uma aplicação web para aplicar efeitos de desfoque em imagens de forma fácil 
 - 🔄 Opção para redefinir e trocar imagem
 - 📱 Interface responsiva para desktop e mobile
 
-## 🚀 Demo
-
-A aplicação está disponível em:
-- Frontend: [https://image-blur-app.netlify.app](https://image-blur-app.netlify.app)
-- Backend: [https://image-blur-app.onrender.com](https://image-blur-app.onrender.com)
-
 ## 🛠️ Tecnologias Utilizadas
 
 ### Backend
