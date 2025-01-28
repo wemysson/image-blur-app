@@ -142,10 +142,20 @@ document.getElementById('fileInput').addEventListener('change', (e) => {
 function toggleFullscreen() {
     const container = document.getElementById('imageContainer');
     container.classList.toggle('fullscreen');
-    
     if (container.classList.contains('fullscreen')) {
         document.body.style.overflow = 'hidden';
     } else {
         document.body.style.overflow = 'auto';
     }
 }
+
+// Event listener para a tecla Esc
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const container = document.getElementById('imageContainer');
+        if (container.classList.contains('fullscreen')) {
+            container.classList.remove('fullscreen');
+            document.body.style.overflow = 'auto';
+        }
+    }
+});
