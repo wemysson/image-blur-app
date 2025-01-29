@@ -7,7 +7,16 @@ from functools import lru_cache
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            "https://image-blur-app.netlify.app",
+            "https://image-blur-app.onrender.com",
+            "http://localhost:5000",
+            "http://localhost:3000"
+        ]
+    }
+})
 
 # Configurações
 MAX_IMAGE_SIZE = 1200
