@@ -1,7 +1,6 @@
 let currentImage = null;
-let originalImage = null;  // Armazena a imagem original
-let lastBlurUpdate = 0;
-const updateDelay = 150; // Delay em ms para atualizar o desfoque
+let originalImage = null;
+const updateDelay = 150;
 
 // Função para debounce
 function debounce(func, wait) {
@@ -32,11 +31,11 @@ async function processImage(file, isInitialUpload = false) {
         
         currentImage = data.image;
         if (isInitialUpload) {
-            originalImage = currentImage; // Salva a imagem original apenas no upload inicial
+            originalImage = data.image;
+            document.getElementById('dropZone').style.display = 'none';
+            document.getElementById('imageContainer').style.display = 'block';
         }
         document.getElementById('previewImage').src = currentImage;
-        document.getElementById('imageContainer').style.display = 'block';
-        document.getElementById('dropZone').style.display = 'none';
     } catch (error) {
         alert('Erro ao processar imagem: ' + error.message);
     }
@@ -44,7 +43,7 @@ async function processImage(file, isInitialUpload = false) {
 
 // Função para atualizar o desfoque com debounce
 const updateBlur = debounce(async (value) => {
-    if (!currentImage) return;
+    if (!originalImage) return;
     
     if (parseFloat(value) === 0) {
         // Se o valor do blur for 0, restaura a imagem original
@@ -53,11 +52,12 @@ const updateBlur = debounce(async (value) => {
         return;
     }
     
-    const file = await fetch(originalImage)  // Usa a imagem original como base
+    // Cria um arquivo a partir da imagem original
+    const file = await fetch(originalImage)
         .then(res => res.blob())
         .then(blob => new File([blob], 'image.jpg', { type: 'image/jpeg' }));
     
-    await processImage(file);
+    await processImage(file, false);
 }, updateDelay);
 
 // Event Listeners
@@ -95,12 +95,12 @@ async function downloadImage() {
 
 // Função para redefinir
 function resetImage() {
-    currentImage = null;
-    originalImage = null;
+    if (!originalImage) return;
+    
+    currentImage = originalImage;
     document.getElementById('blurRange').value = 0;
     document.getElementById('blurValue').textContent = '0';
-    document.getElementById('imageContainer').style.display = 'none';
-    document.getElementById('dropZone').style.display = 'block';
+    document.getElementById('previewImage').src = originalImage;
 }
 
 // Função para trocar imagem
@@ -124,14 +124,14 @@ dropZone.addEventListener('drop', (e) => {
     dropZone.classList.remove('dragover');
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) {
-        processImage(file, true);  // true indica upload inicial
+        processImage(file, true);
     }
 });
 
 document.getElementById('fileInput').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
-        processImage(file, true);  // true indica upload inicial
+        processImage(file, true);
     }
 });
 
