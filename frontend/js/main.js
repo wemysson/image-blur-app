@@ -1,7 +1,31 @@
 // Configuração de URL baseada no ambiente
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:5000' 
-    : 'https://image-blur-app.onrender.com';
+const API_URL = (() => {
+    const hostname = window.location.hostname;
+    const protocols = ['https', 'http'];
+    const domains = [
+        'image-blur-app.netlify.app', 
+        'image-blur-app.onrender.com', 
+        'localhost'
+    ];
+    const ports = ['5000', '3000', '8000'];
+
+    // Tenta encontrar uma URL válida
+    for (let protocol of protocols) {
+        for (let domain of domains) {
+            for (let port of ports) {
+                const url = domain === 'localhost' 
+                    ? `${protocol}://localhost:${port}` 
+                    : `${protocol}://${domain}`;
+                if (hostname === domain || (domain === 'localhost' && hostname === '127.0.0.1')) {
+                    return url;
+                }
+            }
+        }
+    }
+
+    // Fallback
+    return 'https://image-blur-app.onrender.com';
+})();
 
 let originalImage = null;
 let currentImage = null;
